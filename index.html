@@ -1,1 +1,74 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.7;
 
+contract Bank {
+    uint totalBalanceOfContract = 0;
+
+    function getContractBalance() public view returns(uint){
+        return totalBalanceOfContract;
+    }
+
+    mapping(address => uint) public balances;
+    mapping(address => uint) depositeTimeStamp;
+
+    function addBalance() public payable{
+        balances[msg.sender] = msg.value;
+        totalBalanceOfContract = totalBalanceOfContract + msg.value;
+        depositeTimeStamp[msg.sender] = block.timestamp;
+    }
+
+    function getBalance(address userAddress) public view returns(uint){
+        uint principal = balances[userAddress];
+        uint timeElapsed = block.timestamp - depositeTimeStamp[userAddress];
+        return principal + uint((principal * 7 * timeElapsed)/(100*365*24*60*60))+1;
+    }
+<!-- Remix ide is powerful open source tool that provides ability to develop a smart contract from browser-->
+
+    function withdraw(uint ammount) public payable{
+        address payable withdrawto = payable(msg.sender);
+        withdrawto.transfer(ammount);
+        totalBalanceOfContract = totalBalanceOfContract - ammount;
+        balances[msg.sender] = totalBalanceOfContract;
+    }
+}
+
+
+
+//SPDX-License-Identifier:UNLICENSED
+pragma solidity ^0.8.7;
+
+contract studenData{
+
+
+
+    string[] public addSubject;
+    
+    struct student{
+        string name;
+        uint mobileNo;
+        string emailAddress;
+        string[] subjects;
+    }
+    
+    mapping(uint => student) public class;
+
+    function addStudent(uint _rollno,string memory _sname,uint _number,string memory _email,string memory _subject1,string memory _subject2,string memory _subject3) public {
+        addSubject.push(_subject1);
+        addSubject.push(_subject2);
+        addSubject.push(_subject3);
+        class[_rollno] = student(_sname,_number,_email,addSubject);
+    }
+
+    function getStudent(uint _rollno,string memory _sname,uint _number,string memory _email,string memory _subject1,string memory _subject2,string memory _subject3) public {}
+
+    
+    address payable public schoolAccount = payable(0x5B38Da6a701c568545dCfcB03FcB875f56beddC4);
+    function payfees() public payable{
+        schoolAccount.transfer(msg.value);
+    }
+
+}
+
+contract insti{
+    
+}
